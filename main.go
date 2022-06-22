@@ -1,7 +1,9 @@
 package main
 
 import (
+	"fmt"
 	"gedebook/auth"
+	"gedebook/book"
 	"gedebook/handler"
 	"gedebook/helper"
 	"gedebook/user"
@@ -21,6 +23,19 @@ func main() {
 	}
 
 	userRepository := user.NewRepository(db)
+	bookRepository := book.NewRepository(db)
+
+	books, err := bookRepository.FindByUserID(9)
+
+	fmt.Println("debug")
+	fmt.Println("debug")
+	fmt.Println("debug")
+	fmt.Println(len(books))
+	for _, book := range books {
+		fmt.Println(book.Name)
+		fmt.Println(book.FileImage)
+	}
+
 	userService := user.NewService(userRepository)
 	authService := auth.NewService()
 	
