@@ -7,6 +7,7 @@ type BookFormatter struct {
 	ShortDescription string `json:"short_description"`
 	FileImage        string `json:"file_image"`
 	Quantity         int    `json:"quantity"`
+	Slug             string `json:"slug"`
 }
 
 func FormatBook(book Book) BookFormatter {
@@ -17,6 +18,7 @@ func FormatBook(book Book) BookFormatter {
 	bookFormatter.ShortDescription = book.ShortDescription
 	bookFormatter.FileImage = book.FileImage
 	bookFormatter.Quantity = book.Quantity
+	bookFormatter.Slug = book.Slug
 
 	return bookFormatter
 }
