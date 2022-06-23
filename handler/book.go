@@ -34,6 +34,6 @@ func (h *bookHandler) GetBooks(c *gin.Context) {
 		return
 	}
 
-	response := helper.APIResponse("List of books", http.StatusOK, "success", books)
+	response := helper.APIResponse("List of books", http.StatusOK, "success", book.FormatBooks(books))
 	c.JSON(http.StatusOK, response)
 }
