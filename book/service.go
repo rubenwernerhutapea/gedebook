@@ -2,6 +2,7 @@ package book
 
 type Service interface {
 	GetBooks(userID int) ([]Book, error)
+	GetBookByID(input GetBookDetailInput) (Book, error)
 }
 
 type service struct {
@@ -28,4 +29,13 @@ func (s *service) GetBooks(userID int) ([]Book, error) {
 	}
 
 	return books, nil
+}
+
+func (s *service) GetBookByID(input GetBookDetailInput) (Book, error) {
+	book, err := s.repository.FindByID(input.ID)
+	if err != nil {
+		return book, err
+	}
+
+	return book, nil
 }

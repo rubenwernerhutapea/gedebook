@@ -5,6 +5,7 @@ import "gorm.io/gorm"
 type Repository interface {
 	FindAll() ([]Book, error)
 	FindByUserID(userID int) ([]Book, error)
+	FindByID(ID int) (Book, error)
 }
 
 type repository struct {
@@ -35,4 +36,16 @@ func (r *repository) FindByUserID(userID int) ([]Book, error) {
 	}
 
 	return books, nil
+}
+
+func (r *repository) FindByID(ID int) (Book, error) {
+	var book Book
+
+	err := r.db.Preload("User").Where("id = ?", ID).Find(&book).Error
+
+	if err != nil {
+		return book, err
+	}
+
+	return book, nil
 }

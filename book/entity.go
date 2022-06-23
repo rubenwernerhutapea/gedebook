@@ -1,5 +1,7 @@
 package book
 
+import "gedebook/user"
+
 type Book struct {
 	ID               int
 	UserID           int
@@ -11,4 +13,5 @@ type Book struct {
 	Slug             string
 	CreatedAt        int
 	UpdatedAt        int
+	User             user.User
 }
