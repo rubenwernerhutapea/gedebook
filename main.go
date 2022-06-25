@@ -42,6 +42,7 @@ func main() {
 
 	api.GET("/books", bookHandler.GetBooks)
 	api.GET("/books/:id", bookHandler.GetBook)
+	api.POST("/books", authMiddleware(authService, userService), bookHandler.CreateBook)
 
 	router.Run()
 
