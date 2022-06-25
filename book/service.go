@@ -1,6 +1,7 @@
 package book
 
 import (
+	"errors"
 	"fmt"
 
 	"github.com/gosimple/slug"
@@ -10,6 +11,7 @@ type Service interface {
 	GetBooks(userID int) ([]Book, error)
 	GetBookByID(input GetBookDetailInput) (Book, error)
 	CreateBook(input CreateBookInput) (Book, error)
+	UpdateBook(inputID GetBookDetailInput, inputData CreateBookInput) (Book, error)
 }
 
 type service struct {
@@ -65,4 +67,28 @@ func (s *service) CreateBook(input CreateBookInput) (Book, error) {
 	}
 
 	return newBook, nil
+}
+
+func (s *service) UpdateBook(inputID GetBookDetailInput, inputData CreateBookInput) (Book, error) {
+	book, err := s.repository.FindByID(inputID.ID)
+	if err != nil {
+		return book, err
+	}
+
+	if book.UserID != inputData.User.ID {
+		return book, errors.New("Not an owner of the book")
+	}
+
+	book.Name = inputData.Name
+	book.ShortDescription = inputData.ShortDescription
+	book.Description = inputData.Description
+	book.FileImage = inputData.FileImage
+	book.Quantity = inputData.Quantity
+
+	updatedBook, err := s.repository.Update(book)
+	if err != nil {
+		return updatedBook, err
+	}
+
+	return updatedBook, nil
 }

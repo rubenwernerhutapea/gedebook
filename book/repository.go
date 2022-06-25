@@ -7,6 +7,7 @@ type Repository interface {
 	FindByUserID(userID int) ([]Book, error)
 	FindByID(ID int) (Book, error)
 	Save(book Book) (Book, error)
+	Update(book Book) (Book, error)
 }
 
 type repository struct {
@@ -53,6 +54,16 @@ func (r *repository) FindByID(ID int) (Book, error) {
 
 func (r *repository) Save(book Book) (Book, error) {
 	err := r.db.Create(&book).Error
+	if err != nil {
+		return book, err
+	}
+
+	return book, nil
+}
+
+func (r *repository) Update(book Book) (Book, error) {
+	err := r.db.Save(&book).Error
+	
 	if err != nil {
 		return book, err
 	}

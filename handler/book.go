@@ -97,3 +97,38 @@ func (h *bookHandler) CreateBook(c *gin.Context) {
 // ambil current user dari jwt/handler
 // panggil service, parameternya input struct (dan juga buat slug)
 // panggil repository untuk simpan data campaign baru
+func (h *bookHandler) UpdateBook(c *gin.Context) {
+	var inputID book.GetBookDetailInput
+
+	err := c.ShouldBindUri(&inputID)
+	if err != nil {
+		response := helper.APIResponse("Failed to update book", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	var inputData book.CreateBookInput
+
+	err = c.ShouldBindJSON(&inputData)
+	if err != nil {
+		errors := helper.FormatValidationError(err)
+		errorMessage := gin.H{"errors": errors}
+
+		response := helper.APIResponse("Failed to update book", http.StatusUnprocessableEntity, "error", errorMessage)
+		c.JSON(http.StatusUnprocessableEntity, response)
+		return
+	}
+
+	currentUser := c.MustGet("currentUser").(user.User)
+	inputData.User = currentUser
+
+	updatedBook, err := h.service.UpdateBook(inputID, inputData)
+	if err != nil {
+		response := helper.APIResponse("Failed to update book", http.StatusBadRequest, "error", nil)
+		c.JSON(http.StatusBadRequest, response)
+		return
+	}
+
+	response := helper.APIResponse("Success to update book", http.StatusOK, "success", book.FormatBook(updatedBook))
+	c.JSON(http.StatusOK, response)
+}
